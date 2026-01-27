@@ -1,0 +1,420 @@
+:root{
+    --bg-main:#0b1220;
+    --bg-glass:rgba(255,255,255,0.08);
+    --accent:#38bdf8;
+    --accent-hover:#7dd3fc;
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+    --border-soft:rgba(255,255,255,0.15);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0b1220,#020617);
+    color:var(--text-main);
+    display:flex;
+}
+
+/* SIDEBAR */
+aside{
+    width:260px;
+    min-height:100vh;
+    background:rgba(2,6,23,0.9);
+    border-right:1px solid var(--border-soft);
+    padding:40px 25px;
+    position:fixed;
+}
+
+aside h1{
+    font-size:1.5rem;
+    margin-bottom:8px;
+}
+
+aside p{
+    font-size:0.9rem;
+    color:var(--text-muted);
+    margin-bottom:30px;
+}
+
+aside nav a{
+    display:block;
+    padding:12px 16px;
+    margin-bottom:10px;
+    border-radius:10px;
+    color:var(--text-main);
+    transition:0.3s;
+}
+
+aside nav a:hover{
+    background:var(--accent);
+    color:#020617;
+}
+
+/* MAIN CONTENT */
+main{
+    margin-left:260px;
+    width:100%;
+    padding:60px 8%;
+}
+
+section{
+    margin-bottom:80px;
+}
+
+section h2{
+    font-size:2rem;
+    margin-bottom:30px;
+    position:relative;
+}
+
+section h2::after{
+    content:"";
+    width:50px;
+    height:3px;
+    background:var(--accent);
+    position:absolute;
+    left:0;
+    bottom:-8px;
+}
+
+/* GLASS CARD */
+.card{
+    background:var(--bg-glass);
+    backdrop-filter:blur(14px);
+    border:1px solid var(--border-soft);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* ABOUT */
+.about{
+    display:flex;
+    gap:40px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.about img{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid var(--accent);
+}
+
+.about p{
+    color:var(--text-muted);
+    line-height:1.8;
+}
+
+/* SKILLS */
+.skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.skills span{
+    padding:10px 18px;
+    border-radius:25px;
+    border:1px solid var(--border-soft);
+    transition:0.3s;
+}
+
+.skills span:hover{
+    background:var(--accent);
+    color:#020617;
+}
+
+/* PROJECTS */
+.projects{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+}
+
+.project-card p{
+    color:var(--text-muted);
+}
+
+.project-card a{
+    color:var(--accent);
+}
+
+/* CERTS */
+.certs{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:30px;
+}
+
+.certs img{
+    width:100%;
+    border-radius:14px;
+    margin-bottom:15px;
+}
+
+/* CONTACT */
+.contact p{
+    margin-bottom:10px;
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    color:var(--text-muted);
+    font-size:0.85rem;
+    margin-top:40px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    aside{
+        position:relative;
+        width:100%;
+        min-height:auto;
+    }
+    main{
+        margin-left:0;
+        padding:40px 6%;
+    }
+}
+.cert-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px; 
+}
+
+.btn {
+  display: inline-block;
+  background-color: #3a5f7d;   /* pastel dark blue */
+  color: #f0f6ff;
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.btn:hover {
+  background-color: #2f4f6a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.link {
+  color: #3a5f7d;          /* pastel dark blue */
+  text-decoration: none;  /* remove underline */
+  font-weight: 500;
+  transition: color 0.3s ease, opacity 0.2s ease;
+}
+
+.link:hover {
+  color: #2f4f6a;
+  opacity: 0.9;
+}
+
+.link:active {
+  opacity: 0.8;
+}
+
+/*             GAME CSS         */
+        .game-container {
+            text-align: center;
+            max-width: 100%;
+        }
+
+
+        .score-board {
+            background-color: #0f380f;
+            color: #9bbc0f;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        canvas {
+            background-color: #9bbc0f;
+            border: 8px solid #0f380f;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .mobile-controls {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .control-btn {
+            background-color: #0f380f;
+            color: #9bbc0f;
+            border: 3px solid #9bbc0f;
+            border-radius: 10px;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:active {
+            background-color: #9bbc0f;
+            color: #0f380f;
+            transform: scale(0.95);
+        }
+
+        .control-btn.up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .control-btn.left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .control-btn.center {
+            grid-column: 2;
+            grid-row: 2;
+            background-color: #306230;
+            border-color: #0f380f;
+            font-size: 1em;
+            cursor: default;
+        }
+
+        .control-btn.right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .control-btn.down {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .keyboard-controls {
+            margin-top: 20px;
+            color: #9bbc0f;
+            font-size: 0.9em;
+        }
+
+        .keyboard-controls p {
+            margin: 5px 0;
+        }
+
+        #gameOverScreen {
+            position: absolute;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(15, 56, 15, 0.9);
+            color: #9bbc0f;
+            border-radius: 10px;
+            padding: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        #gameOverScreen.show {
+            display: flex;
+        }
+
+        #gameOverScreen h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #gameOverScreen p {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: #9bbc0f;
+            color: #0f380f;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+
+            .mobile-controls {
+                grid-template-columns: repeat(3, 70px);
+                grid-template-rows: repeat(3, 70px);
+            }
+
+            .control-btn {
+                font-size: 1.5em;
+            }
+
+            .keyboard-controls {
+                font-size: 0.8em;
+            }
+
+            #gameOverScreen {
+                padding: 30px;
+            }
+
+            #gameOverScreen h2 {
+                font-size: 2em;
+            }
+
+            #gameOverScreen p {
+                font-size: 1.2em;
+            }
+        }

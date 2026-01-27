@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dodge the Blocks</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    canvas {
+      background: #222;
+      display: block;
+      margin: 20px auto;
+      border: 2px solid #555;
+    }
+
+    #closeBtn {
+      background: #ff3b3b;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    #closeBtn:hover {
+      background: #d60000;
+      transform: scale(1.05);
+    }
+
+    #closeBtn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 Dodge the Blocks</h1>
+  <p>Use ← → arrows to move</p>
+
+  <button id="closeBtn">✖ Close Game</button>
+
+  <canvas id="game" width="400" height="500"></canvas>
+  <p id="status"></p>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    let player = {
+      x: 180,
+      y: 450,
+      width: 40,
+      height: 40,
+      speed: 6
+    };
+
+    let blocks = [];
+    let score = 0;
+    let gameOver = false;
+
+    // Controls
+    let keys = {};
+    document.addEventListener("keydown", e => keys[e.key] = true);
+    document.addEventListener("keyup", e => keys[e.key] = false);
+
+    // Close window button
+    document.getElementById("closeBtn").addEventListener("click", () => {
+      window.close();
+
+      // Fallback if browser blocks closing
+      setTimeout(() => {
+        window.location.href = "about:blank";
+      }, 100);
+    });
+
+    // Create falling blocks
+    function spawnBlock() {
+      blocks.push({
+        x: Math.random() * 360,
+        y: -20,
+        size: 20,
+        speed: 3 + Math.random() * 3
+      });
+    }
+
+    // Collision detection
+    function hit(a, b) {
+      return (
+        a.x < b.x + b.size &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.size &&
+        a.y + a.height > b.y
+      );
+    }
+
+    // Game loop
+    function update() {
+      if (gameOver) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Move player
+      if (keys["ArrowLeft"] && player.x > 0) player.x -= player.speed;
+      if (keys["ArrowRight"] && player.x < canvas.width - player.width)
+        player.x += player.speed;
+
+      // Draw player
+      ctx.fillStyle = "lime";
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      // Draw blocks
+      ctx.fillStyle = "red";
+      for (let i = blocks.length - 1; i >= 0; i--) {
+        let b = blocks[i];
+        b.y += b.speed;
+        ctx.fillRect(b.x, b.y, b.size, b.size);
+
+        if (hit(player, b)) {
+          gameOver = true;
+          document.getElementById("status").innerText =
+            "💀 Game Over! Final Score: " + score;
+        }
+
+        if (b.y > canvas.height) blocks.splice(i, 1);
+      }
+
+      // Score
+      score++;
+      ctx.fillStyle = "white";
+      ctx.fillText("Score: " + score, 10, 20);
+
+      requestAnimationFrame(update);
+    }
+
+    // Spawn blocks
+    setInterval(spawnBlock, 800);
+
+    update();
+  </script>
+
+</body>
+</html>
