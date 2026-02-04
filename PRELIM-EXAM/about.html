@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about JPCS - The premier organization for ICT students in the Philippines">
+    <title>About JPCS - Junior Philippine Computer Society</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    
+    <!-- About page specific CSS -->
+    <style>
+        .about-hero {
+            background: 
+                linear-gradient(rgba(125, 79, 80, 0.9), rgba(183, 131, 141, 0.8)),
+                url('assets/img/about-bg.jpg') center center no-repeat;
+            background-size: cover;
+            color: white;
+        }
+        
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            margin: var(--space-xl) 0;
+        }
+        
+        .mission-card, .vision-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .mission-card h3, .vision-card h3 {
+            color: var(--color-maroon);
+            margin-bottom: var(--space-md);
+        }
+        
+        .mission-icon, .vision-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-maroon), var(--color-brown));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+        
+        .value-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: transform var(--transition-base);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-maroon);
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            color: var(--color-maroon);
+            font-size: 1.5rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: var(--space-xl) auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--color-accent);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-end;
+            padding-right: 50px;
+        }
+        
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-left: 50px;
+        }
+        
+        .timeline-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .timeline-year {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--color-maroon);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-year {
+            right: -70px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-year {
+            left: -70px;
+        }
+        
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+        
+        .officer-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-base);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .officer-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-maroon);
+        }
+        
+        .officer-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .officer-info {
+            padding: var(--space-lg);
+            text-align: center;
+        }
+        
+        .officer-name {
+            color: var(--color-maroon);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .officer-position {
+            color: var(--color-brown);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .partner-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xl);
+            justify-content: center;
+            align-items: center;
+            margin-top: var(--space-lg);
+        }
+        
+        .partner-logo {
+            height: 60px;
+            opacity: 0.8;
+            transition: opacity var(--transition-base);
+        }
+        
+        .partner-logo:hover {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                padding-left: 60px !important;
+                padding-right: 0 !important;
+            }
+            
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                justify-content: flex-start;
+            }
+            
+            .timeline-year {
+                left: 0 !important;
+                right: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="visually-hidden">Skip to main content</a>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="assets/img/jpcs.png" alt="Junior Philippine Computer Society Logo" class="logo-img">
+                </a>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="about.html" class="nav-link active">About</a></li>
+                        <li><a href="events.html" class="nav-link">Events</a></li>
+                        <li><a href="registration.html" class="nav-link">Join Us</a></li>
+                        <li><a href="officers.html" class="nav-link">Officers</a></li>
+                        <li><a href="registration.html" class="btn btn-sm">Sign Up</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero about-hero" id="main-content">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">About <span class="text-gradient">JPCS</span></h1>
+                <p class="hero-description">Shaping the future of ICT education and professional development in the Philippines.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: var(--space-lg);">Who We Are</h2>
+                    <div class="grid grid-2">
+                        <div>
+                            <p>The <strong>Junior Philippine Computer Society (JPCS)</strong> is the premier student organization dedicated to Information and Communications Technology (ICT) education in the Philippines. We serve as the youth arm of the Philippine Computer Society (PCS), connecting students with industry professionals and academic excellence.</p>
+                            <p>Our mission is to bridge the gap between classroom learning and real-world ICT applications, preparing students to become globally competitive professionals in the digital age.</p>
+                        </div>
+                        <div>
+                            <img src="assets/img/about-team.jpg" alt="JPCS Team" style="width: 100%; border-radius: var(--radius-lg);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="section" style="background: var(--color-surface-alt);">
+        <div class="container">
+            <h2 class="section-title">Our Mission & Vision</h2>
+            
+            <div class="mission-vision">
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>To enhance ICT education by providing students with practical experiences that complement academic learning, fostering innovation, collaboration, and professional development that prepares them for successful careers in technology.</p>
+                </div>
+                
+                <div class="vision-card">
+                    <div class="vision-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Our Vision</h3>
+                    <p>To be the leading student organization that shapes the future of ICT professionals in the Philippines, creating a vibrant community where students, academia, and industry collaborate to drive technological advancement and digital transformation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Our Core Values</h2>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h4>Innovation</h4>
+                    <p>Encouraging creative thinking and technological advancement in ICT solutions.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h4>Collaboration</h4>
+                    <p>Building strong partnerships between students, schools, and industry leaders.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Excellence</h4>
+                    <p>Pursuing the highest standards in ICT education and professional development.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Community</h4>
+                    <p>Creating a supportive network that nurtures growth and lifelong connections.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="section" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));">
+        <div class="container">
+            <h2 class="section-title" style="color: var(--color-dark);">Why JPCS Matters</h2>
+            
+            <div class="grid grid-2" style="gap: var(--space-xl);">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 style="color: var(--color-maroon); margin-bottom: var(--space-md);">For Students</h3>
+                        <p>JPCS transforms classroom knowledge into practical skills through:</p>
+                        <ul style="margin-top: var(--space-md);">
+                            <li>Hands-on workshops and training sessions</li>
+                            <li>National competitions and hackathons</li>
+                            <li>Industry networking opportunities</li>
+                            <li>Professional development programs</li>
+                            <li>Access to the PCS professional network</li>
+                            <li>Career guidance and mentorship</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 style="color: var(--color-maroon); margin-bottom: var(--space-md);">For Schools</h3>
+                        <p>JPCS enhances institutional reputation and educational quality by:</p>
+                        <ul style="margin-top: var(--space-md);">
+                            <li>Showcasing student achievements nationally</li>
+                            <li>Providing direct industry-academia linkages</li>
+                            <li>Keeping curriculum relevant to industry needs</li>
+                            <li>Creating opportunities for faculty development</li>
+                            <li>Enhancing school visibility through competitions</li>
+                            <li>Building stronger alumni networks</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Timeline -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Our Journey</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Foundation</h4>
+                        <p>Established as the youth arm of the Philippine Computer Society to bridge the gap between ICT education and industry needs.</p>
+                    </div>
+                    <div class="timeline-year">2005</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>National Expansion</h4>
+                        <p>Expanded to major universities across the Philippines, creating a nationwide network of ICT students.</p>
+                    </div>
+                    <div class="timeline-year">2010</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Industry Partnerships</h4>
+                        <p>Forged strategic partnerships with leading tech companies to provide students with real-world experience.</p>
+                    </div>
+                    <div class="timeline-year">2015</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Digital Transformation</h4>
+                        <p>Adapted programs to include emerging technologies like AI, blockchain, and cloud computing.</p>
+                    </div>
+                    <div class="timeline-year">2020</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership -->
+    <section class="section" style="background: var(--color-surface-alt);">
+        <div class="container">
+            <h2 class="section-title">Meet Our Leadership</h2>
+            
+            <div class="leadership-grid">
+                <div class="officer-card">
+                    <img src="assets/img/officer1.png" alt="President" class="officer-image">
+                    <div class="officer-info">
+                        <h4 class="officer-name">Norman Mangusin</h4>
+                        <p class="officer-position">National President</p>
+                        <p>4th Year Computer Science, University of the Philippines</p>
+                    </div>
+                </div>
+                
+                <div class="officer-card">
+                    <img src="assets/img/officer2.jpg" alt="Vice President" class="officer-image">
+                    <div class="officer-info">
+                        <h4 class="officer-name">Rodrigo "Doggy" Duterte</h4>
+                        <p class="officer-position">Vice President for External Affairs</p>
+                        <p>3rd Year IT, Ateneo de Manila University</p>
+                    </div>
+                </div>
+                
+                <div class="officer-card">
+                    <img src="assets/img/officer3.jpg" alt="Secretary" class="officer-image">
+                    <div class="officer-info">
+                        <h4 class="officer-name">Danny Devito</h4>
+                        <p class="officer-position">Secretary General</p>
+                        <p>4th Year Software Engineering, De La Salle University</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Load Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Footer Loader -->
+    <script>
+        // Load footer
+        fetch('assets/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+                document.getElementById('footer-container').innerHTML = '<p>Footer failed to load.</p>';
+            });
+    </script>
+    
+    <!-- Mobile Menu Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    if (this.getAttribute('href') !== '#') {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

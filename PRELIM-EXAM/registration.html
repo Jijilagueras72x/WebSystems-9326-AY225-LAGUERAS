@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Join JPCS - Register to become a member of Junior Philippine Computer Society">
+    <title>Join JPCS - Registration</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    
+    <!-- Registration specific CSS -->
+    <style>
+        /* Registration specific styles */
+        .registration-hero {
+            background: 
+                linear-gradient(rgba(125, 79, 80, 0.9), rgba(183, 131, 141, 0.8)),
+                url('assets/img/enroll.jpg') center center no-repeat;
+            background-size: cover;
+            color: white;
+        }
+        
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+        
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-accent);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--color-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--color-dark);
+            position: relative;
+            z-index: 2;
+            transition: all var(--transition-base);
+        }
+        
+        .progress-step.active {
+            background: var(--color-maroon);
+            border-color: var(--color-maroon);
+            color: white;
+        }
+        
+        .progress-step.completed {
+            background: var(--color-brown);
+            border-color: var(--color-brown);
+            color: white;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .checkbox-group, .radio-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .checkbox-label, .radio-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+            cursor: pointer;
+        }
+        
+        .terms-container {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: var(--space-md);
+            background: var(--color-surface-alt);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-accent);
+            margin-bottom: var(--space-md);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-xl);
+            gap: var(--space-md);
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: var(--space-xl);
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: var(--color-maroon);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .form-field-required::after {
+            content: ' *';
+            color: var(--color-maroon);
+        }
+        
+        .password-strength {
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-xs);
+            overflow: hidden;
+        }
+        
+        .password-strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width var(--transition-base);
+        }
+        
+        .password-strength-meter.weak { 
+            width: 33%; 
+            background: #E63946; 
+        }
+        .password-strength-meter.medium { 
+            width: 66%; 
+            background: #FFB703; 
+        }
+        .password-strength-meter.strong { 
+            width: 100%; 
+            background: #2E8B57; 
+        }
+        
+        .validation-message {
+            font-size: 0.9rem;
+            margin-top: var(--space-xs);
+            display: none;
+        }
+        
+        .validation-message.valid {
+            color: #2E8B57;
+            display: block;
+        }
+        
+        .validation-message.invalid {
+            color: #E63946;
+            display: block;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--color-accent);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--color-maroon);
+            background: var(--color-surface-alt);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--color-maroon);
+            background: var(--color-secondary);
+        }
+        
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--color-surface-alt);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-md);
+        }
+        
+        .file-info {
+            flex-grow: 1;
+        }
+        
+        .remove-file {
+            color: var(--color-maroon);
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="visually-hidden">Skip to main content</a>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="assets/img/jpcs.png" alt="Junior Philippine Computer Society Logo" class="logo-img">
+                </a>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="about.html" class="nav-link">About</a></li>
+                        <li><a href="events.html" class="nav-link">Events</a></li>
+                        <li><a href="registration.html" class="nav-link active">Join Us</a></li>
+                        <li><a href="officers.html" class="nav-link">Officers</a></li>
+                        <li><a href="registration.html" class="btn btn-sm">Sign Up</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero registration-hero" id="main-content">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Join <span class="text-gradient">JPCS</span> Today</h1>
+                <p class="hero-description">Become part of the premier ICT student organization in the Philippines and unlock endless opportunities for growth and success.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form Section -->
+    <section class="section">
+        <div class="container">
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <div class="card-content">
+                    <!-- Progress Steps -->
+                    <div class="form-progress">
+                        <div class="progress-step active" data-step="1">
+                            <span>1</span>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <span>2</span>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <span>3</span>
+                        </div>
+                        <div class="progress-step" data-step="4">
+                            <span>4</span>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <form id="registrationForm" novalidate>
+                        <!-- Step 1: Personal Information -->
+                        <div class="form-step active" id="step1">
+                            <h2 style="margin-bottom: var(--space-lg);">Personal Information</h2>
+                            
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label form-field-required">First Name</label>
+                                    <input type="text" id="firstName" class="form-input" required>
+                                    <div class="validation-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label form-field-required">Last Name</label>
+                                    <input type="text" id="lastName" class="form-input" required>
+                                    <div class="validation-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label form-field-required">Email Address</label>
+                                <input type="email" id="email" class="form-input" required>
+                                <div class="validation-message"></div>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" id="phone" class="form-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="birthdate" class="form-label form-field-required">Date of Birth</label>
+                                    <input type="date" id="birthdate" class="form-input" required>
+                                    <div class="validation-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea id="address" class="form-input" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Academic Information -->
+                        <div class="form-step" id="step2">
+                            <h2 style="margin-bottom: var(--space-lg);">Academic Information</h2>
+                            
+                            <div class="form-group">
+                                <label for="school" class="form-label form-field-required">School/University</label>
+                                <input type="text" id="school" class="form-input" required>
+                                <div class="validation-message"></div>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label for="course" class="form-label form-field-required">Course/Program</label>
+                                    <input type="text" id="course" class="form-input" required>
+                                    <div class="validation-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="yearLevel" class="form-label form-field-required">Year Level</label>
+                                    <select id="yearLevel" class="form-input" required>
+                                        <option value="">Select Year Level</option>
+                                        <option value="1st Year">1st Year</option>
+                                        <option value="2nd Year">2nd Year</option>
+                                        <option value="3rd Year">3rd Year</option>
+                                        <option value="4th Year">4th Year</option>
+                                        <option value="5th Year">5th Year</option>
+                                        <option value="Graduate">Graduate</option>
+                                    </select>
+                                    <div class="validation-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="studentId" class="form-label form-field-required">Student ID Number</label>
+                                <input type="text" id="studentId" class="form-input" required>
+                                <div class="validation-message"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Are you a PCS member?</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="pcsMember" value="yes">
+                                        <span>Yes</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="pcsMember" value="no" checked>
+                                        <span>No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Account Setup -->
+                        <div class="form-step" id="step3">
+                            <h2 style="margin-bottom: var(--space-lg);">Account Setup</h2>
+                            
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label for="username" class="form-label form-field-required">Username</label>
+                                    <input type="text" id="username" class="form-input" required>
+                                    <div class="validation-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="password" class="form-label form-field-required">Password</label>
+                                    <input type="password" id="password" class="form-input" required>
+                                    <div class="password-strength">
+                                        <div class="password-strength-meter"></div>
+                                    </div>
+                                    <div class="validation-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword" class="form-label form-field-required">Confirm Password</label>
+                                <input type="password" id="confirmPassword" class="form-input" required>
+                                <div class="validation-message"></div>
+                            </div>
+                            
+                            <!-- Profile Picture Upload -->
+                            <div class="form-group">
+                                <label class="form-label">Profile Picture (Optional)</label>
+                                <div class="upload-area" id="uploadArea">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--color-maroon); margin-bottom: var(--space-sm);"></i>
+                                    <p>Drag & drop your photo here or click to browse</p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: var(--space-xs);">
+                                        Max file size: 5MB • Accepted formats: JPG, PNG
+                                    </p>
+                                    <input type="file" id="profilePicture" accept=".jpg,.jpeg,.png" style="display: none;">
+                                </div>
+                                <div id="uploadedFileContainer" style="display: none;">
+                                    <div class="uploaded-file">
+                                        <i class="fas fa-file-image" style="color: var(--color-maroon);"></i>
+                                        <div class="file-info">
+                                            <span id="fileName"></span>
+                                            <span id="fileSize" style="font-size: 0.9rem; color: #666;"></span>
+                                        </div>
+                                        <span class="remove-file" id="removeFile">
+                                            <i class="fas fa-times"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Review & Submit -->
+                        <div class="form-step" id="step4">
+                            <h2 style="margin-bottom: var(--space-lg);">Review & Submit</h2>
+                            
+                            <div class="card" style="background: var(--color-surface-alt); margin-bottom: var(--space-lg);">
+                                <div class="card-content">
+                                    <h3 style="margin-bottom: var(--space-md);">Registration Summary</h3>
+                                    <div id="reviewSummary">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label form-field-required">Terms & Conditions</label>
+                                <div class="terms-container">
+                                    <h4>JPCS Membership Terms & Conditions</h4>
+                                    <p>By joining the Junior Philippine Computer Society (JPCS), you agree to:</p>
+                                    <ul>
+                                        <li>Abide by the rules and regulations of JPCS</li>
+                                        <li>Participate actively in organizational activities</li>
+                                        <li>Maintain good academic standing</li>
+                                        <li>Uphold the values and principles of JPCS</li>
+                                        <li>Pay membership dues as required</li>
+                                        <li>Contribute to the growth and development of the organization</li>
+                                        <li>Respect fellow members and officers</li>
+                                        <li>Attend required meetings and events</li>
+                                    </ul>
+                                    <p>Membership may be revoked for violation of these terms.</p>
+                                </div>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="agreeTerms" required>
+                                        <span>I have read and agree to the Terms & Conditions</span>
+                                    </label>
+                                    <div class="validation-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="newsletter">
+                                    <span>Subscribe to JPCS newsletter for updates on events and opportunities</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="prevBtn" style="display: none;">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button type="button" class="btn" id="nextBtn">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                                <i class="fas fa-paper-plane"></i> Submit Registration
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message (Hidden by default) -->
+                    <div class="success-message" id="successMessage" style="display: none;">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Registration Successful!</h2>
+                        <p>Welcome to JPCS! Your registration has been received successfully.</p>
+                        <p>We've sent a confirmation email to <span id="confirmationEmail"></span> with further instructions.</p>
+                        <div style="margin-top: var(--space-xl);">
+                            <a href="index.html" class="btn" style="margin-right: var(--space-sm);">
+                                <i class="fas fa-home"></i> Back to Home
+                            </a>
+                            <a href="events.html" class="btn btn-outline">
+                                <i class="fas fa-calendar"></i> View Events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="section" style="background: var(--color-surface-alt);">
+        <div class="container">
+            <h2 class="section-title">Membership <span class="text-gradient">Benefits</span></h2>
+            
+            <div class="grid grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Learning Opportunities</h4>
+                    <p>Access to workshops, seminars, and training sessions led by industry experts.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h4>Networking</h4>
+                    <p>Connect with professionals, alumni, and fellow ICT students across the Philippines.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h4>Competitions</h4>
+                    <p>Participate in local and national ICT competitions with cash prizes and recognition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Load Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Registration JavaScript -->
+    <script src="assets/js/registration.js"></script>
+    
+    <script src="assets/js/script.js"></script>
+
+    <!-- Load Footer -->
+    <script>
+        // Load footer
+        fetch('assets/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+                document.getElementById('footer-container').innerHTML = '<p>Footer failed to load.</p>';
+            });
+    </script>
+    
+</body>
+</html>

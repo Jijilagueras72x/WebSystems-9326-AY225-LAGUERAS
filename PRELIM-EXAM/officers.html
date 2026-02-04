@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Meet the JPCS Officers - Leadership Team of Junior Philippine Computer Society">
+    <title>Officers - JPCS Leadership Team</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    
+    <!-- Officers page specific CSS -->
+    <style>
+        .officers-hero {
+            background: 
+                linear-gradient(rgba(125, 79, 80, 0.9), rgba(183, 131, 141, 0.8)),
+                url('assets/img/team.jpg') center center no-repeat;
+            background-size: cover;
+            color: white;
+        }
+        
+        .officers-filter {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .filter-btn {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-surface);
+            border: 2px solid var(--color-accent);
+            border-radius: var(--radius-lg);
+            color: var(--color-dark);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-maroon);
+            border-color: var(--color-maroon);
+            color: white;
+        }
+        
+        .officers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-xl);
+        }
+        
+        .officer-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+            border: 1px solid var(--color-accent);
+            height: 100%;
+        }
+        
+        .officer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-maroon);
+        }
+        
+        .officer-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+        
+        .officer-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+        }
+        
+        .officer-card:hover .officer-image {
+            transform: scale(1.1);
+        }
+        
+        .officer-rank {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-maroon);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .officer-content {
+            padding: var(--space-lg);
+        }
+        
+        .officer-name {
+            font-size: 1.5rem;
+            color: var(--color-dark);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .officer-position {
+            color: var(--color-maroon);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .officer-school {
+            color: var(--color-brown);
+            font-weight: 500;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .officer-bio {
+            color: #666;
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+        }
+        
+        .officer-contact {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .contact-link {
+            width: 40px;
+            height: 40px;
+            background: var(--color-surface-alt);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-maroon);
+            transition: all var(--transition-fast);
+        }
+        
+        .contact-link:hover {
+            background: var(--color-maroon);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .leadership-team {
+            background: var(--color-surface-alt);
+            padding: var(--space-xl) 0;
+            margin: var(--space-xl) 0;
+        }
+        
+        .team-structure {
+            max-width: 800px;
+            margin: var(--space-xl) auto;
+            position: relative;
+        }
+        
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .chart-level {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .chart-node {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--color-accent);
+            text-align: center;
+            min-width: 200px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .chart-node.president {
+            border-color: var(--color-maroon);
+            background: linear-gradient(135deg, var(--color-secondary), white);
+        }
+        
+        .chart-line {
+            width: 2px;
+            height: 40px;
+            background: var(--color-accent);
+            margin: 0 auto;
+        }
+        
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-xl) 0;
+        }
+        
+        .stat-card {
+            background: var(--color-surface);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 1px solid var(--color-accent);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-maroon);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .term-info {
+            background: linear-gradient(135deg, var(--color-maroon), var(--color-brown));
+            color: white;
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin: var(--space-xl) 0;
+        }
+        
+        @media (max-width: 768px) {
+            .officers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-level {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .chart-node {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="visually-hidden">Skip to main content</a>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="assets/img/jpcs.png" alt="Junior Philippine Computer Society Logo" class="logo-img">
+                </a>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="about.html" class="nav-link">About</a></li>
+                        <li><a href="events.html" class="nav-link">Events</a></li>
+                        <li><a href="registration.html" class="nav-link">Join Us</a></li>
+                        <li><a href="officers.html" class="nav-link active">Officers</a></li>
+                        <li><a href="registration.html" class="btn btn-sm">Sign Up</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero officers-hero" id="main-content">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Meet Our <span class="text-gradient">Officers</span></h1>
+                <p class="hero-description">Dedicated leaders shaping the future of ICT education in the Philippines.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Officers Filter -->
+    <section class="section">
+        <div class="container">
+            <div class="officers-filter">
+                <button class="filter-btn active" data-filter="all">All Officers</button>
+                <button class="filter-btn" data-filter="executive">Executive Board</button>
+                <button class="filter-btn" data-filter="academic">Academic Committee</button>
+                <button class="filter-btn" data-filter="events">Events Committee</button>
+                <button class="filter-btn" data-filter="membership">Membership Committee</button>
+                <button class="filter-btn" data-filter="publicity">Publicity Committee</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Officers Grid -->
+    <section class="section" style="background: var(--color-surface-alt);">
+        <div class="container">
+            <div class="officers-grid">
+                <!-- Officer 1: President (From Leadership) -->
+                <div class="officer-card" data-category="executive">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer1.png" alt="Norman Mangusin" class="officer-image">
+                        <div class="officer-rank">President</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Norman Mangusin</h3>
+                        <p class="officer-position">National President</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 4th Year Computer Science, University of the Philippines
+                        </p>
+                        <p class="officer-bio">
+                            With 3 years of leadership experience in JPCS, Maria spearheads the organization's strategic direction. She has led multiple successful hackathons and established key industry partnerships. Passionate about women in tech initiatives.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:president@jpcs.org" class="contact-link" aria-label="Email Maria">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com" class="contact-link" aria-label="Twitter Profile" target="_blank">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 2: VP External (From Leadership) -->
+                <div class="officer-card" data-category="executive">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer2.jpg" alt="Rodrigo Duterte - VP External" class="officer-image">
+                        <div class="officer-rank">VP External</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Rodrigo "Doggy" Duterte</h3>
+                        <p class="officer-position">Vice President for External Affairs</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 3rd Year IT, Ateneo de Manila University
+                        </p>
+                        <p class="officer-bio">
+                            Manages JPCS's external relations with industry partners and other student organizations. Successfully secured sponsorships from 15+ tech companies. Awarded "Most Promising Student Leader 2023" by the Philippine Computer Society.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:vpexternal@jpcs.org" class="contact-link" aria-label="Email Juan">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com" class="contact-link" aria-label="GitHub Profile" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 3: Secretary General (From Leadership) -->
+                <div class="officer-card" data-category="executive">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer3.jpg" alt="Danny Devito - Secretary General" class="officer-image">
+                        <div class="officer-rank">Secretary</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Danny Devito</h3>
+                        <p class="officer-position">Secretary General</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 4th Year Software Engineering, De La Salle University
+                        </p>
+                        <p class="officer-bio">
+                            Oversees organizational documentation and communication. Implemented a digital filing system that improved efficiency by 40%. Previously served as Events Coordinator, organizing 20+ successful workshops and seminars.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:secretary@jpcs.org" class="contact-link" aria-label="Email Andrea">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://instagram.com" class="contact-link" aria-label="Instagram Profile" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 4: Treasurer -->
+                <div class="officer-card" data-category="executive">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer4.png" alt="Miguel Tan - Treasurer" class="officer-image">
+                        <div class="officer-rank">Treasurer</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Miguel Tan</h3>
+                        <p class="officer-position">National Treasurer</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 3rd Year Business Analytics, University of Santo Tomas
+                        </p>
+                        <p class="officer-bio">
+                            Manages JPCS's financial operations with precision and transparency. Implemented budget tracking system that reduced costs by 25%. Finance major with internship experience at a leading accounting firm.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:treasurer@jpcs.org" class="contact-link" aria-label="Email Miguel">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com" class="contact-link" aria-label="Twitter Profile" target="_blank">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 5: Academic Chair -->
+                <div class="officer-card" data-category="academic">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer5.jpg" alt="Sophia Chen - Academic Chair" class="officer-image">
+                        <div class="officer-rank">Academic Chair</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Sophia Chen</h3>
+                        <p class="officer-position">Academic Committee Chairperson</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 4th Year Computer Engineering, Mapúa University
+                        </p>
+                        <p class="officer-bio">
+                            Leads the academic committee in developing educational programs and workshops. Created the "Tech Scholar" mentorship program connecting 50+ students with industry mentors. Published research on AI in education.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:academic@jpcs.org" class="contact-link" aria-label="Email Sophia">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com" class="contact-link" aria-label="GitHub Profile" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 6: Events Chair -->
+                <div class="officer-card" data-category="events">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer6.png" alt="James Wilson - Events Chair" class="officer-image">
+                        <div class="officer-rank">Events Chair</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">James Wilson</h3>
+                        <p class="officer-position">Events Committee Chairperson</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 2nd Year Multimedia Arts, De La Salle-College of Saint Benilde
+                        </p>
+                        <p class="officer-bio">
+                            Coordinates all JPCS events from planning to execution. Successfully organized the largest student hackathon in JPCS history with 300+ participants. Background in project management and creative design.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:events@jpcs.org" class="contact-link" aria-label="Email James">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://instagram.com" class="contact-link" aria-label="Instagram Profile" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 7: Membership Chair -->
+                <div class="officer-card" data-category="membership">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer7.jpg" alt="Isabel Garcia - Membership Chair" class="officer-image">
+                        <div class="officer-rank">Membership Chair</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Isabel Garcia</h3>
+                        <p class="officer-position">Membership Committee Chairperson</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 3rd Year Psychology, University of the Philippines
+                        </p>
+                        <p class="officer-bio">
+                            Manages member recruitment, engagement, and retention programs. Increased JPCS membership by 35% through innovative outreach campaigns. Psychology major applying behavioral science to community building.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:membership@jpcs.org" class="contact-link" aria-label="Email Isabel">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://facebook.com" class="contact-link" aria-label="Facebook Profile" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 8: Publicity Chair -->
+                <div class="officer-card" data-category="publicity">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer8.jpg" alt="David Lee - Publicity Chair" class="officer-image">
+                        <div class="officer-rank">Publicity Chair</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">David Lee</h3>
+                        <p class="officer-position">Publicity Committee Chairperson</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 4th Year Communication Arts, University of Asia and the Pacific
+                        </p>
+                        <p class="officer-bio">
+                            Handles JPCS's branding, social media, and public relations. Increased social media engagement by 200% through strategic content creation. Former intern at a leading digital marketing agency.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:publicity@jpcs.org" class="contact-link" aria-label="Email David">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com" class="contact-link" aria-label="Twitter Profile" target="_blank">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Officer 9: IT Officer -->
+                <div class="officer-card" data-category="academic">
+                    <div class="officer-image-container">
+                        <img src="assets/img/officer9.jpg" alt="Rachel Ong - IT Officer" class="officer-image">
+                        <div class="officer-rank">IT Officer</div>
+                    </div>
+                    <div class="officer-content">
+                        <h3 class="officer-name">Rachel Ong</h3>
+                        <p class="officer-position">Chief Information Technology Officer</p>
+                        <p class="officer-school">
+                            <i class="fas fa-graduation-cap"></i> 4th Year Information Systems, Ateneo de Manila University
+                        </p>
+                        <p class="officer-bio">
+                            Manages JPCS's technical infrastructure and digital platforms. Developed the JPCS member portal and event management system. Security enthusiast with certifications in cybersecurity and cloud computing.
+                        </p>
+                        <div class="officer-contact">
+                            <a href="mailto:it@jpcs.org" class="contact-link" aria-label="Email Rachel">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://linkedin.com" class="contact-link" aria-label="LinkedIn Profile" target="_blank">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com" class="contact-link" aria-label="GitHub Profile" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Structure -->
+    <section class="leadership-team">
+        <div class="container">
+            <h2 class="section-title">Organizational <span class="text-gradient">Structure</span></h2>
+            
+            <div class="team-structure">
+                <div class="org-chart">
+                    <!-- President Level -->
+                    <div class="chart-level">
+                        <div class="chart-node president">
+                            <strong>President</strong><br>
+                            <small>Maria Santos</small>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-line"></div>
+                    
+                    <!-- VP Level -->
+                    <div class="chart-level">
+                        <div class="chart-node">
+                            <strong>VP External</strong><br>
+                            <small>Juan Dela Cruz</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>Secretary</strong><br>
+                            <small>Andrea Reyes</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>Treasurer</strong><br>
+                            <small>Miguel Tan</small>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-line"></div>
+                    
+                    <!-- Committee Level -->
+                    <div class="chart-level">
+                        <div class="chart-node">
+                            <strong>Academic</strong><br>
+                            <small>Sophia Chen</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>Events</strong<br>
+                            <small>James Wilson</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>Membership</strong><br>
+                            <small>Isabel Garcia</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>Publicity</strong><br>
+                            <small>David Lee</small>
+                        </div>
+                        <div class="chart-node">
+                            <strong>IT Officer</strong><br>
+                            <small>Rachel Ong</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Leadership <span class="text-gradient">Impact</span></h2>
+            
+            <div class="statistics">
+                <div class="stat-card">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Dedicated Officers</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Universities Represented</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Events Organized</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Students Impacted</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Election Information -->
+    <section class="section" style="background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));">
+        <div class="container">
+            <div class="card">
+                <div class="card-content">
+                    <h2 style="margin-bottom: var(--space-md); color: var(--color-dark);">Become an Officer</h2>
+                    <p style="margin-bottom: var(--space-lg);">
+                        Interested in joining the JPCS leadership team? Officer elections are held annually in May. 
+                        Applicants must be active JPCS members for at least one semester and maintain good academic standing.
+                    </p>
+                    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                        <a href="registration.html" class="btn">
+                            <i class="fas fa-user-plus"></i> Become a Member First
+                        </a>
+                        <a href="#" class="btn btn-outline" style="border-color: var(--color-maroon); color: var(--color-maroon);">
+                            <i class="fas fa-file-alt"></i> View Election Guidelines
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Load Footer -->
+    <div id="footer-container"></div>
+
+    <script src="assets/js/script.js"></script>
+    <!-- Load Footer -->
+    <script>
+        // Load footer
+        fetch('assets/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+                document.getElementById('footer-container').innerHTML = '<p>Footer failed to load.</p>';
+            });
+    </script>
+</body>
+</html>

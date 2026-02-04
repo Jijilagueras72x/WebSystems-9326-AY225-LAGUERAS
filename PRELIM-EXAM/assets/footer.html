@@ -1,0 +1,77 @@
+<!-- templates/footer.html -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="logo" style="color: white; margin-bottom: var(--space-md);">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">JPCS</span>
+                </div>
+                <p>Empowering the Next Generation of ICT Professionals since 2008.</p>
+                <div class="social-links">
+                    <a href="https://facebook.com/jpcs" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/jpcs" class="social-link" aria-label="Twitter" target="_blank" rel="noopener">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com/jpcs" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/jpcs" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://youtube.com/jpcs" class="social-link" aria-label="YouTube" target="_blank" rel="noopener">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About JPCS</a></li>
+                    <li><a href="events.html">Upcoming Events</a></li>
+                    <li><a href="registration.html">Membership</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="resources.html">Blog & Articles</a></li>
+                    <li><a href="resources.html#materials">Learning Materials</a></li>
+                    <li><a href="careers.html">Career Opportunities</a></li>
+                    <li><a href="portal.html">Student Portal</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> ICT Building, University Campus</li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+63212345678">(02) 1234-5678</a></li>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:contact@jpcs.org">contact@jpcs.org</a></li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 9AM-5PM</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year"></span> Junior Philippine Computer Society. All rights reserved.</p>
+            <p style="margin-top: var(--space-sm); font-size: 0.9rem;">
+                <a href="privacy.html" style="color: rgba(255,255,255,0.7);">Privacy Policy</a> | 
+                <a href="terms.html" style="color: rgba(255,255,255,0.7);">Terms of Service</a> |
+                <a href="sitemap.html" style="color: rgba(255,255,255,0.7);">Sitemap</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Update copyright year automatically
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>

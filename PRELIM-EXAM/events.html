@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upcoming JPCS Events - Hackathons, Workshops, Seminars, and Competitions">
+    <title>Events - JPCS Activities and Programs</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    
+    <!-- Events page specific CSS -->
+    <style>
+        .events-hero {
+            background: 
+                linear-gradient(rgba(125, 79, 80, 0.9), rgba(183, 131, 141, 0.8)),
+                url('assets/img/upcoming.jpg') center center no-repeat;
+            background-size: cover;
+            color: white;
+        }
+        
+        .events-filter {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .filter-btn {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--color-surface);
+            border: 2px solid var(--color-accent);
+            border-radius: var(--radius-lg);
+            color: var(--color-dark);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-maroon);
+            border-color: var(--color-maroon);
+            color: white;
+        }
+        
+        .events-grid {
+            display: grid;
+            gap: var(--space-xl);
+        }
+        
+        .event-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-maroon);
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .event-content {
+            padding: var(--space-xl);
+        }
+        
+        .event-meta {
+            display: flex;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--color-maroon);
+            font-weight: 500;
+        }
+        
+        .meta-item i {
+            color: var(--color-brown);
+        }
+        
+        .event-title {
+            font-size: 1.8rem;
+            color: var(--color-dark);
+            margin-bottom: var(--space-md);
+        }
+        
+        .event-description {
+            color: #666;
+            margin-bottom: var(--space-lg);
+            line-height: 1.7;
+        }
+        
+        .event-tags {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .event-tag {
+            background: var(--color-secondary);
+            color: var(--color-maroon);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .calendar-view {
+            background: var(--color-surface-alt);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin: var(--space-xl) 0;
+        }
+        
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-sm);
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            background: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .calendar-day:hover {
+            background: var(--color-secondary);
+        }
+        
+        .calendar-day.has-event {
+            background: var(--color-maroon);
+            color: white;
+        }
+        
+        .calendar-day.header {
+            background: transparent;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+        
+        .calendar-day.empty {
+            background: transparent;
+            cursor: default;
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--color-maroon);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-xl);
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface);
+            border: 1px solid var(--color-accent);
+            color: var(--color-dark);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--color-maroon);
+            color: white;
+            border-color: var(--color-maroon);
+        }
+        
+        @media (max-width: 768px) {
+            .event-image {
+                height: 200px;
+            }
+            
+            .event-content {
+                padding: var(--space-lg);
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: var(--space-xs);
+            }
+            
+            .calendar-day {
+                padding: var(--space-sm);
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="visually-hidden">Skip to main content</a>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="assets/img/jpcs.png" alt="Junior Philippine Computer Society Logo" class="logo-img">
+                </a>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="about.html" class="nav-link">About</a></li>
+                        <li><a href="events.html" class="nav-link active">Events</a></li>
+                        <li><a href="registration.html" class="nav-link">Join Us</a></li>
+                        <li><a href="officers.html" class="nav-link">Officers</a></li>
+                        <li><a href="registration.html" class="btn btn-sm">Sign Up</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero events-hero" id="main-content">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">JPCS <span class="text-gradient">Events</span></h1>
+                <p class="hero-description">Explore upcoming hackathons, workshops, seminars, and competitions designed to enhance your ICT skills and network.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Filter -->
+    <section class="section">
+        <div class="container">
+            <div class="events-filter">
+                <button class="filter-btn active" data-filter="all">All Events</button>
+                <button class="filter-btn" data-filter="hackathon">Hackathons</button>
+                <button class="filter-btn" data-filter="workshop">Workshops</button>
+                <button class="filter-btn" data-filter="seminar">Seminars</button>
+                <button class="filter-btn" data-filter="competition">Competitions</button>
+                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="past">Past Events</button>
+            </div>
+            
+            <!-- Calendar View -->
+            <div class="calendar-view">
+                <div class="month-nav">
+                    <button class="btn btn-sm" id="prevMonth">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <h3 id="currentMonth">November 2024</h3>
+                    <button class="btn btn-sm" id="nextMonth">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="calendar-grid" id="calendar">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events List -->
+    <section class="section" style="background: var(--color-surface-alt);">
+        <div class="container">
+            <div class="events-grid">
+                <!-- Event 1 -->
+                <div class="event-card" data-category="hackathon upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Code Fusion Hackathon" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> November 15-17, 2024
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> UP Diliman, Quezon City
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 48 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 200+ Participants
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Code Fusion Hackathon 2024</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Hackathon</span>
+                            <span class="event-tag">Web Development</span>
+                            <span class="event-tag">AI/ML</span>
+                            <span class="event-tag">Prizes: ₱100,000</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Join the biggest student hackathon in the Philippines! Code Fusion brings together the brightest minds to solve real-world problems through technology. This 48-hour marathon challenges teams to develop innovative solutions focusing on sustainable development goals. Categories include Web Development, Mobile Apps, AI Solutions, and IoT Projects. Sponsored by top tech companies with mentorship from industry experts.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-calendar-plus"></i> Add to Calendar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="event-card" data-category="workshop upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="AI Workshop" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> December 5, 2024
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Virtual (Zoom)
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 4 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 150 Seats
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">AI & Machine Learning Workshop Series</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Workshop</span>
+                            <span class="event-tag">Artificial Intelligence</span>
+                            <span class="event-tag">Python</span>
+                            <span class="event-tag">Beginner Friendly</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Dive into the world of Artificial Intelligence with our comprehensive workshop series. Learn the fundamentals of machine learning, neural networks, and data preprocessing using Python. Hands-on sessions include building your first AI model, image recognition, and natural language processing. Perfect for beginners and intermediate learners. Certificate of completion provided to all participants.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download Materials
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="event-card" data-category="seminar upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Tech Career Seminar" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> December 12, 2024
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Ateneo de Manila University
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 3 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 100 Seats
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Tech Career Paths & Industry Insights</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Seminar</span>
+                            <span class="event-tag">Career Development</span>
+                            <span class="event-tag">Networking</span>
+                            <span class="event-tag">Industry Leaders</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Planning your career in technology? Join industry leaders from Google, Microsoft, and local tech companies as they share insights about career paths, required skills, and industry trends. Learn about software engineering, data science, cybersecurity, and product management roles. Includes networking session with recruiters and Q&A panel with recent graduates now working in top tech companies.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-user-tie"></i> Meet Speakers
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="event-card" data-category="competition upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Programming Competition" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> January 20-21, 2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> De La Salle University
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 8 Hours Daily
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 50 Teams
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">National Inter-School Programming Competition</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Competition</span>
+                            <span class="event-tag">Programming</span>
+                            <span class="event-tag">Algorithm</span>
+                            <span class="event-tag">Team Event</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            The most prestigious programming competition for university students in the Philippines. Test your algorithm skills, problem-solving abilities, and coding efficiency against the best teams nationwide. Problems range from beginner to advanced levels. Winners receive trophies, certificates, internship opportunities, and cash prizes. This ICPC-style competition prepares teams for international programming contests.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Team
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> Competition Rules
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-trophy"></i> View Past Winners
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 5 -->
+                <div class="event-card" data-category="workshop upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Cybersecurity Workshop" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> February 8, 2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Virtual (Zoom)
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 6 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 80 Seats
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Cybersecurity Fundamentals & Ethical Hacking</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Workshop</span>
+                            <span class="event-tag">Cybersecurity</span>
+                            <span class="event-tag">Ethical Hacking</span>
+                            <span class="event-tag">Hands-on Lab</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Learn essential cybersecurity concepts and ethical hacking techniques in this intensive workshop. Topics include network security, vulnerability assessment, penetration testing, and security best practices. Hands-on lab sessions using Kali Linux and security tools. Suitable for students interested in cybersecurity careers. Conducted by certified cybersecurity professionals with industry experience.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-shield-alt"></i> Security Guidelines
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 6 (Past Event) -->
+                <div class="event-card" data-category="hackathon past">
+                    <img src="assets/img/upcoming.jpg" alt="Previous Hackathon" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> October 10-12, 2024
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> University of Santo Tomas
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 48 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> Completed
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Sustainable Tech Hackathon 2024</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Past Event</span>
+                            <span class="event-tag">Hackathon</span>
+                            <span class="event-tag">Sustainability</span>
+                            <span class="event-tag">Completed</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Successfully completed hackathon focused on sustainable technology solutions. 75 teams participated with innovative projects addressing environmental challenges. Winners developed solutions for waste management, renewable energy monitoring, and sustainable agriculture using IoT and mobile applications. View project demos and winner announcements in our event gallery.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-photo-video"></i> View Gallery
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-medal"></i> See Winners
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-file-code"></i> View Projects
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 7 -->
+                <div class="event-card" data-category="seminar upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Startup Seminar" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> March 15, 2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Mapúa University
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 4 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 120 Seats
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Tech Startup & Entrepreneurship Bootcamp</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Seminar</span>
+                            <span class="event-tag">Entrepreneurship</span>
+                            <span class="event-tag">Startup</span>
+                            <span class="event-tag">Business</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Learn how to turn your tech ideas into successful startups. This bootcamp covers ideation, market research, business model development, funding strategies, and pitching to investors. Features successful Filipino tech entrepreneurs as speakers and mentors. Includes hands-on sessions for developing business plans and investor pitch decks. Perfect for students with innovative tech solutions looking to launch their own ventures.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-lightbulb"></i> Submit Idea
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 8 -->
+                <div class="event-card" data-category="workshop upcoming">
+                    <img src="assets/img/upcoming.jpg" alt="Web Dev Workshop" class="event-image">
+                    <div class="event-content">
+                        <div class="event-meta">
+                            <span class="meta-item">
+                                <i class="far fa-calendar"></i> April 5, 2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i> FEU Institute of Technology
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i> 8 Hours
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-users"></i> 60 Seats
+                            </span>
+                        </div>
+                        
+                        <h2 class="event-title">Full-Stack Web Development Masterclass</h2>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Workshop</span>
+                            <span class="event-tag">Web Development</span>
+                            <span class="event-tag">React.js</span>
+                            <span class="event-tag">Node.js</span>
+                        </div>
+                        
+                        <p class="event-description">
+                            Comprehensive full-stack web development workshop covering modern technologies. Learn to build complete web applications using React.js for frontend, Node.js for backend, and MongoDB for database. Includes hands-on project building, deployment to cloud platforms, and best practices for web development. Suitable for intermediate developers looking to enhance their skills. All participants receive project source code and resources.
+                        </p>
+                        
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <a href="#" class="btn btn-sm">
+                                <i class="fas fa-ticket-alt"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline">
+                                <i class="fas fa-laptop-code"></i> Prerequisites
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Highlights -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Event <span class="text-gradient">Highlights</span></h2>
+            
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="feature-icon" style="width: 50px; height: 50px; margin-bottom: var(--space-md);">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Prizes & Rewards</h3>
+                        <p>Win cash prizes, internships, tech gadgets, and certificates in our competitions and hackathons.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="feature-icon" style="width: 50px; height: 50px; margin-bottom: var(--space-md);">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>Certification</h3>
+                        <p>Receive official certificates for workshop and seminar participation to boost your resume.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="feature-icon" style="width: 50px; height: 50px; margin-bottom: var(--space-md);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h3>Networking</h3>
+                        <p>Connect with industry professionals, recruiters, and fellow ICT students across the Philippines.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Load Footer -->
+    <div id="footer-container"></div>
+
+    <!-- Events JavaScript -->
+    <script src="assets/js/script.js"></script>
+
+    
+    <!-- Load Footer -->
+    <script>
+        // Load footer
+        fetch('assets/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+                document.getElementById('footer-container').innerHTML = '<p>Footer failed to load.</p>';
+            });
+    </script>
+</body>
+</html>
