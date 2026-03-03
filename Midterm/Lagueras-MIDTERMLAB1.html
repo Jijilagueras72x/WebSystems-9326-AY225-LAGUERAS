@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Games Library · Complete Game Details</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: #161616;
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .app-header h1 {
+            font-weight: 500;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+        .app-header p {
+            color: #b0b0b0;
+            margin-top: 0.25rem;
+        }
+        .app-footer {
+            background: #1e293b;
+            color: #94a3b8;
+            text-align: center;
+            padding: 1.2rem;
+            margin-top: 3rem;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .scraper-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.15);
+            margin-bottom: 2.5rem;
+            border: 1px solid #e9eef2;
+        }
+
+        .quick-pages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .pg-btn {
+            background: #edf2f7;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .pg-btn:hover {
+            background: #f15a24;
+            color: white;
+            border-color: #f15a24;
+        }
+        .pg-btn.active {
+            background: #f15a24;
+            color: white;
+            border-color: #f15a24;
+        }
+
+        .url-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        .url-field {
+            flex: 3;
+            min-width: 280px;
+        }
+        .url-field label {
+            font-weight: 600;
+            color: #0f172a;
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .url-field input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            font-size: 1rem;
+            transition: 0.15s;
+            background: #f8fafc;
+        }
+        .url-field input:focus {
+            outline: none;
+            border-color: #f15a24;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(241,90,36,0.2);
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            background: #f15a24;
+            color: white;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 8px 14px -8px rgba(241,90,36,0.5);
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1e293b;
+            border: 2px solid #cbd5e1;
+            box-shadow: none;
+        }
+        .btn-outline:hover:not(:disabled) {
+            background: #eef2f6;
+            border-color: #94a3b8;
+        }
+        .btn:hover:not(:disabled) {
+            background: #d94d1a;
+            transform: scale(1.02);
+        }
+
+        .progress-container {
+            margin: 1.5rem 0 1rem;
+            background: #f0f4fa;
+            border-radius: 60px;
+            padding: 0.2rem;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            height: 2.5rem;
+            border-radius: 60px;
+            background: linear-gradient(90deg, #f15a24, #ff8c5a);
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            transition: width 0.4s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 0 1rem;
+        }
+        .progress-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        .status-message {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: #e9f0f9;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #cbd5e1;
+            border-top-color: #f15a24;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .info-bar {
+            background: #e9f0f9;
+            border-radius: 40px;
+            padding: 0.8rem 1.8rem;
+            margin: 1rem 0 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: #0f3b5e;
+        }
+        .badge {
+            background: #0f172a;
+            color: white;
+            border-radius: 60px;
+            padding: 0.3rem 1.2rem;
+            font-weight: 600;
+        }
+        .missing-handler {
+            color: #b45309;
+            background: #fffbeb;
+            border-radius: 30px;
+            padding: 0.2rem 1rem;
+        }
+        .filter-badge {
+            background: #f15a24;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0 1.8rem;
+        }
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 60px;
+            padding: 0.2rem 0.2rem 0.2rem 1.5rem;
+            border: 1px solid #cfdee9;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 0.8rem 0.5rem;
+            background: transparent;
+            outline: none;
+            font-size: 1rem;
+        }
+        .search-box button {
+            background: #f15a24;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 32px;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 25px 40px -18px rgba(0,0,0,0.25);
+            border: 1px solid #dee7ef;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th {
+            background: #0f172a;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 0.8rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-right: 1px solid #2d3a4f;
+        }
+        table th:last-child { border-right: none; }
+        table td {
+            padding: 1.2rem 0.8rem;
+            border-bottom: 1px solid #e6edf5;
+            color: #1e293b;
+            vertical-align: middle;
+        }
+        table tr:last-child td { border-bottom: none; }
+
+        .game-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 18px;
+            background: #f1f5f9;
+            border: 2px solid white;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .game-img:hover { 
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(241,90,36,0.2);
+        }
+
+        .game-link {
+            color: #f15a24;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.1s;
+            padding: 0.3rem 0;
+        }
+        .game-link:hover {
+            color: #d94d1a;
+            text-decoration: underline;
+            transform: translateX(5px);
+        }
+        .game-link::after {
+            content: "↗";
+            font-size: 1.1rem;
+            opacity: 0.6;
+        }
+
+        .not-available {
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        .proxy-log {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .warning-message {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 60px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 60px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .removed-tag {
+            background: #e2e8f0;
+            color: #64748b;
+            padding: 0.2rem 0.8rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 900px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { position: absolute; top: -9999px; left: -9999px; }
+            tr {
+                border: 1px solid #d1d9e6;
+                border-radius: 24px;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: white;
+            }
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                border-bottom: 1px dashed #dae2ec;
+                padding: 0.7rem 0.5rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+            td:last-child { border-bottom: none; }
+            td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                width: 35%;
+                min-width: 120px;
+                color: #0f172a;
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                letter-spacing: 0.3px;
+            }
+            .game-img { width: 60px; height: 60px; }
+            .game-link::after { content: " ↗"; }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <h1>🎮 EA Games Library · Complete Game Details <span class="filter-badge">Not Available for missing</span></h1>
+        <p>All fields shown · Missing data shows as "Not Available"</p>
+    </header>
+
+    <main class="container">
+        <div class="scraper-card">
+            <div class="quick-pages">
+                <span style="font-weight:600; margin-right:0.5rem;">📑 Quick Pages:</span>
+                <button class="pg-btn" data-page="rpg">🎮 RPG</button>
+                <button class="pg-btn" data-page="shooter">🔫 Shooter</button>
+                <button class="pg-btn" data-page="simulation">📊 Simulation</button>
+                <button class="pg-btn" data-page="racing">🏎️ Racing</button>
+                <button class="pg-btn" data-page="action">💥 Action</button>
+                <button class="pg-btn" data-page="sports">⚽ Sports</button>
+            </div>
+
+            <div class="url-row">
+                <div class="url-field">
+                    <label>🔗 EA GAMES LIBRARY URL</label>
+                    <input type="url" id="urlInput" placeholder="https://www.ea.com/games/library/rpg" value="https://www.ea.com/games/library/rpg">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" id="scrapeBtn">🕸️ SCRAPE LIVE URL</button>
+                    <button class="btn-outline btn" id="downloadCsvBtn">📥 DOWNLOAD CSV</button>
+                </div>
+            </div>
+
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+            </div>
+            <div class="progress-status" id="progressStatus" style="display: none;">
+                <div class="status-message" id="statusMessage">
+                    <div class="spinner"></div>
+                    <span id="statusText">Initializing scraper...</span>
+                </div>
+                <span class="badge" id="stageBadge">Step 1/4</span>
+            </div>
+
+            <div class="proxy-log" id="proxyLog">
+                🌐 Proxy log: Ready
+            </div>
+
+            <div class="info-bar">
+                <span>✅ <strong>Games Found:</strong> <span id="gameCount">0</span> <span class="removed-tag" id="removedCount"></span></span>
+                <span class="missing-handler">⚠️ Missing fields → "Not Available"</span>
+                <span class="badge">⚡ All 7 fields shown</span>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔎 Filter by title...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="gameTable">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Game Title</th>
+                        <th>Release Date</th>
+                        <th>Key Features</th>
+                        <th>Platform</th>
+                        <th>Developer</th>
+                        <th>Publisher</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="7" style="text-align:center; padding:3rem;">👆 Click a quick page or enter URL and click "SCRAPE LIVE URL"</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="messageContainer"></div>
+    </main>
+
+    <footer class="app-footer">
+        ⚡ All fields shown · Missing data = "Not Available" · Click titles to visit game page · Made by Jiji
+    </footer>
+
+    <script>
+        (function() {
+            // ─── DOM Elements ───────────────────────────────────────
+            const urlInput = document.getElementById('urlInput');
+            const scrapeBtn = document.getElementById('scrapeBtn');
+            const downloadBtn = document.getElementById('downloadCsvBtn');
+            const tableBody = document.getElementById('tableBody');
+            const gameCountSpan = document.getElementById('gameCount');
+            const removedCountSpan = document.getElementById('removedCount');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const messageContainer = document.getElementById('messageContainer');
+            const proxyLog = document.getElementById('proxyLog');
+            
+            // Progress elements
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressStatus = document.getElementById('progressStatus');
+            const statusText = document.getElementById('statusText');
+            const stageBadge = document.getElementById('stageBadge');
+
+            // ─── State ───────────────────────────────────────────────
+            let games = [];
+            let filteredGames = [];
+            let removedCount = 0;
+
+            // ─── TITLES TO REMOVE ──────────────────────────
+            const TITLES_TO_REMOVE = [
+                'fifa 23',
+                'f1™ 22',
+                'f1 22',
+                'madden nfl 23',
+                'apex legends',
+                'battlefield™ 2042',
+                'battlefield 2042',
+                'the sims 4',
+                'sims 4',
+                'ea play',
+                'fifa',
+                'madden',
+                'battlefield',
+                'sims',
+                'apex'
+            ];
+
+            // ─── Quick page buttons ─────────────────────────────────
+            document.querySelectorAll('.pg-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const page = btn.dataset.page;
+                    urlInput.value = `https://www.ea.com/games/library/${page}`;
+                    
+                    document.querySelectorAll('.pg-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    clearPreviousData();
+                    scrapeLiveURL(urlInput.value);
+                });
+            });
+
+            // ─── CORS proxy definitions ─────────────────────────────
+            const PROXIES = [
+                {
+                    name: 'corsproxy.io',
+                    buildUrl: (target) => `https://corsproxy.io/?${encodeURIComponent(target)}`,
+                    extract: async (res) => res.text(),
+                },
+                {
+                    name: 'allorigins.win',
+                    buildUrl: (target) => `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`,
+                    extract: async (res) => { const j = await res.json(); return j.contents; },
+                },
+                {
+                    name: 'codetabs.com',
+                    buildUrl: (target) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`,
+                    extract: async (res) => res.text(),
+                },
+            ];
+
+            // ─── Helper ──────────────────────────────────────────────
+            const na = (value) => {
+                if (!value || value.trim() === '') return 'Not Available';
+                return value.trim();
+            };
+
+            function shouldRemoveTitle(title) {
+                if (!title) return false;
+                const lowerTitle = title.toLowerCase().trim();
+                for (const removeTitle of TITLES_TO_REMOVE) {
+                    if (lowerTitle.includes(removeTitle)) {
+                        console.log(`Removing: ${title} (matches: ${removeTitle})`);
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function clearPreviousData() {
+                games = [];
+                filteredGames = [];
+                removedCount = 0;
+                
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem;">🔄 Scraping new data... please wait</td></tr>';
+                }
+                
+                if (gameCountSpan) gameCountSpan.innerText = '0';
+                if (removedCountSpan) removedCountSpan.innerText = '';
+                if (searchInput) searchInput.value = '';
+                
+                console.log('Previous data cleared');
+            }
+
+            function showProgress() {
+                progressContainer.style.display = 'block';
+                progressStatus.style.display = 'flex';
+            }
+
+            function hideProgress() {
+                progressContainer.style.display = 'none';
+                progressStatus.style.display = 'none';
+            }
+
+            function updateProgress(percent, message, stage) {
+                progressBar.style.width = percent + '%';
+                progressBar.innerText = percent + '%';
+                statusText.innerText = message;
+                if (stage) stageBadge.innerText = stage;
+            }
+
+            function setControlsDisabled(disabled) {
+                scrapeBtn.disabled = disabled;
+                searchBtn.disabled = disabled;
+                urlInput.disabled = disabled;
+                downloadBtn.disabled = disabled;
+            }
+
+            function showMessage(type, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = type === 'error' ? 'warning-message' : 'success-message';
+                messageDiv.textContent = text;
+                messageContainer.innerHTML = '';
+                messageContainer.appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 5000);
+            }
+
+            function updateProxyLog(message) {
+                proxyLog.innerHTML = `🌐 Proxy log: ${message}`;
+            }
+
+            // ─── Fetch with fallback ─────────────────────────────────
+            async function fetchWithFallback(targetUrl, onProgress) {
+                const errors = [];
+                for (const proxy of PROXIES) {
+                    onProgress(`Trying proxy: ${proxy.name}…`);
+                    updateProxyLog(`Trying ${proxy.name}...`);
+                    try {
+                        const proxyUrl = proxy.buildUrl(targetUrl);
+                        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        const html = await proxy.extract(res);
+                        if (!html || html.length < 200) throw new Error('Empty or too-short response');
+                        updateProxyLog(`✓ Success with ${proxy.name}`);
+                        return html;
+                    } catch (err) {
+                        updateProxyLog(`✗ ${proxy.name} failed: ${err.message}`);
+                        errors.push(`${proxy.name}: ${err.message}`);
+                    }
+                }
+                throw new Error(`All proxies failed.\n${errors.join('\n')}`);
+            }
+
+            // ─── Extract from EA HTML ───────────────────────────────
+            function extractFromEAHTML(htmlString) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlString, 'text/html');
+                
+                const gameBoxes = doc.querySelectorAll('ea-game-box');
+                
+                console.log(`Found ${gameBoxes.length} ea-game-box elements`);
+                
+                const extracted = [];
+                const seenTitles = new Set();
+                let removed = 0;
+
+                gameBoxes.forEach((box) => {
+                    let title = box.getAttribute('main-link-title') || box.getAttribute('title') || '';
+                    
+                    if (!title) {
+                        const anchor = box.querySelector('a');
+                        title = anchor ? anchor.textContent.trim() : '';
+                    }
+                    
+                    // Get the game URL
+                    let gameUrl = box.getAttribute('main-link-url') || '';
+                    
+                    // If no URL in attribute, try to get from anchor
+                    if (!gameUrl) {
+                        const anchor = box.querySelector('a');
+                        gameUrl = anchor ? anchor.getAttribute('href') : '';
+                    }
+                    
+                    // Make sure URL is absolute
+                    if (gameUrl && !gameUrl.startsWith('http')) {
+                        gameUrl = 'https://www.ea.com' + gameUrl;
+                    }
+                    
+                    title = title.replace(/\s+/g, ' ').trim();
+                    
+                    if (!title || seenTitles.has(title)) return;
+                    
+                    if (shouldRemoveTitle(title)) {
+                        removed++;
+                        return;
+                    }
+                    
+                    let imageUrl = box.getAttribute('background-image') || '';
+                    
+                    if (imageUrl) {
+                        imageUrl = imageUrl.replace(/\.adapt\.crop1x1\.\d+w\.jpg/, '.jpg')
+                                         .replace(/\.adapt\.crop1x1\.\d+w\.png/, '.png');
+                    }
+                    
+                    // All fields except title and image are "Not Available" since they're not in ea-game-box
+                    const game = {
+                        image: na(imageUrl),
+                        title: na(title),
+                        url: gameUrl || '#',
+                        release: 'Not Available',
+                        features: 'Not Available',
+                        platform: 'Not Available',
+                        developer: 'Not Available',
+                        publisher: 'Not Available'
+                    };
+                    
+                    extracted.push(game);
+                    seenTitles.add(title);
+                });
+                
+                removedCount = removed;
+                return extracted;
+            }
+
+            function renderTable() {
+                if (!tableBody) return;
+                
+                const fragment = document.createDocumentFragment();
+                
+                if (filteredGames.length === 0) {
+                    const row = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 7;
+                    td.style.textAlign = 'center';
+                    td.style.padding = '2.5rem';
+                    
+                    if (removedCount > 0) {
+                        td.innerText = `😕 No games left after filtering. Removed ${removedCount} specific titles. Try a different category.`;
+                    } else {
+                        td.innerText = '😕 No games found. Try a different URL.';
+                    }
+                    
+                    row.appendChild(td);
+                    fragment.appendChild(row);
+                } else {
+                    filteredGames.forEach(game => {
+                        const tr = document.createElement('tr');
+                        
+                        // Image cell (clickable)
+                        const tdImg = document.createElement('td');
+                        tdImg.setAttribute('data-label', 'Image');
+                        const imgLink = document.createElement('a');
+                        imgLink.href = game.url;
+                        imgLink.target = '_blank';
+                        imgLink.rel = 'noopener noreferrer';
+                        
+                        const img = document.createElement('img');
+                        img.src = game.image;
+                        img.alt = game.title;
+                        img.className = 'game-img';
+                        img.title = `Click to open ${game.title} page`;
+                        img.onerror = (e) => { 
+                            e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" fill="%23f1f5f9"/><text x="40" y="40" font-family="Arial" font-size="12" fill="%23999" text-anchor="middle" dominant-baseline="middle">No image</text></svg>';
+                        };
+                        
+                        imgLink.appendChild(img);
+                        tdImg.appendChild(imgLink);
+                        tr.appendChild(tdImg);
+                        
+                        // Title cell with clickable link
+                        const tdTitle = document.createElement('td');
+                        tdTitle.setAttribute('data-label', 'Game Title');
+                        
+                        const link = document.createElement('a');
+                        link.href = game.url;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.className = 'game-link';
+                        link.innerHTML = `<strong>${game.title}</strong>`;
+                        link.title = `Click to open ${game.title} page (opens in new tab)`;
+                        
+                        tdTitle.appendChild(link);
+                        tr.appendChild(tdTitle);
+                        
+                        // Release Date
+                        const tdRel = document.createElement('td');
+                        tdRel.setAttribute('data-label', 'Release Date');
+                        tdRel.innerHTML = `<span class="not-available">${game.release}</span>`;
+                        tr.appendChild(tdRel);
+                        
+                        // Features
+                        const tdFeat = document.createElement('td');
+                        tdFeat.setAttribute('data-label', 'Key Features');
+                        tdFeat.innerHTML = `<span class="not-available">${game.features}</span>`;
+                        tr.appendChild(tdFeat);
+                        
+                        // Platform
+                        const tdPlat = document.createElement('td');
+                        tdPlat.setAttribute('data-label', 'Platform');
+                        tdPlat.innerHTML = `<span class="not-available">${game.platform}</span>`;
+                        tr.appendChild(tdPlat);
+                        
+                        // Developer
+                        const tdDev = document.createElement('td');
+                        tdDev.setAttribute('data-label', 'Developer');
+                        tdDev.innerHTML = `<span class="not-available">${game.developer}</span>`;
+                        tr.appendChild(tdDev);
+                        
+                        // Publisher
+                        const tdPub = document.createElement('td');
+                        tdPub.setAttribute('data-label', 'Publisher');
+                        tdPub.innerHTML = `<span class="not-available">${game.publisher}</span>`;
+                        tr.appendChild(tdPub);
+                        
+                        fragment.appendChild(tr);
+                    });
+                }
+                
+                tableBody.innerHTML = '';
+                tableBody.appendChild(fragment);
+                gameCountSpan.innerText = filteredGames.length;
+                
+                if (removedCount > 0) {
+                    removedCountSpan.innerText = `🚫 Removed: ${removedCount}`;
+                } else {
+                    removedCountSpan.innerText = '';
+                }
+            }
+
+            function applyFilterAndSearch() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                
+                filteredGames = games.filter(game => {
+                    if (searchTerm === '') return true;
+                    return game.title.toLowerCase().includes(searchTerm);
+                });
+                
+                renderTable();
+            }
+
+            // ─── Main scrape function ─────────────────────────────────
+            async function scrapeLiveURL(targetUrl) {
+                try {
+                    const url = new URL(targetUrl);
+                    if (!url.hostname.includes('ea.com')) {
+                        showMessage('error', '❌ Please enter a valid EA.com URL');
+                        return false;
+                    }
+                } catch (e) {
+                    showMessage('error', '❌ Please enter a valid URL');
+                    return false;
+                }
+
+                clearPreviousData();
+                showProgress();
+                setControlsDisabled(true);
+                
+                updateProgress(10, '🌐 Starting proxy rotation...', 'Step 1/4');
+                
+                try {
+                    updateProgress(20, '📡 Fetching with fallback proxies...', 'Step 2/4');
+                    
+                    const html = await fetchWithFallback(targetUrl, (msg) => {
+                        updateProgress(30, msg, 'Step 2/4');
+                    });
+                    
+                    updateProgress(50, '📦 Processing HTML...', 'Step 2/4');
+                    
+                    if (!html || html.length < 100) {
+                        throw new Error('Received empty response');
+                    }
+                    
+                    updateProgress(70, '🔍 Extracting games and details...', 'Step 3/4');
+                    
+                    const scrapedGames = extractFromEAHTML(html);
+                    
+                    updateProgress(85, `✨ Found ${scrapedGames.length} games (removed ${removedCount} specific titles)`, 'Step 3/4');
+                    
+                    if (scrapedGames.length === 0) {
+                        updateProgress(100, '⚠️ No games after filtering', 'Complete');
+                        if (removedCount > 0) {
+                            showMessage('error', `No games left. Removed ${removedCount} specific titles.`);
+                        } else {
+                            showMessage('error', 'No ea-game-box elements found on this page');
+                        }
+                        games = [];
+                        filteredGames = [];
+                    } else {
+                        games = scrapedGames;
+                        filteredGames = [...games];
+                        showMessage('success', `Found ${games.length} games (all extra fields show "Not Available")`);
+                    }
+                    
+                    updateProgress(95, '📊 Rendering complete table...', 'Step 4/4');
+                    applyFilterAndSearch();
+                    
+                    updateProgress(100, `✅ Complete - ${games.length} games`, 'Done');
+                    
+                    setTimeout(hideProgress, 2000);
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Scraping error:', error);
+                    updateProgress(100, '❌ Scraping failed', 'Error');
+                    showMessage('error', `Failed to scrape: ${error.message}`);
+                    
+                    games = [];
+                    filteredGames = [];
+                    applyFilterAndSearch();
+                    
+                    setTimeout(hideProgress, 3000);
+                    return false;
+                } finally {
+                    setControlsDisabled(false);
+                }
+            }
+
+            // ─── Event listeners ─────────────────────────────────────
+            scrapeBtn.addEventListener('click', async () => {
+                const url = urlInput.value.trim();
+                if (!url) {
+                    showMessage('error', 'Please enter a URL');
+                    return;
+                }
+                await scrapeLiveURL(url);
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                if (filteredGames.length === 0) {
+                    showMessage('error', 'No data to export. Scrape a URL first.');
+                    return;
+                }
+                
+                const headers = ['Title', 'Release Date', 'Key Features', 'Platform', 'Developer', 'Publisher', 'Image URL', 'Game URL'];
+                const rows = filteredGames.map(g => [
+                    g.title,
+                    g.release,
+                    g.features,
+                    g.platform,
+                    g.developer,
+                    g.publisher,
+                    g.image,
+                    g.url
+                ]);
+                
+                let csvContent = headers.join(',') + '\n' + rows.map(row => 
+                    row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
+                ).join('\n');
+                
+                const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `ea_games_${new Date().toISOString().slice(0,10)}.csv`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+                
+                showMessage('success', `Downloaded ${filteredGames.length} games to CSV`);
+            });
+
+            searchBtn.addEventListener('click', applyFilterAndSearch);
+            searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') applyFilterAndSearch(); });
+
+            document.querySelector('.pg-btn')?.classList.add('active');
+            
+            console.log('Complete game details scraper ready');
+        })();
+    </script>
+</body>
+</html>
