@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Text Scraper · GUI refresh</title>
+    <!-- Font Awesome for icons (optional but enhances GUI) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- jQuery (slim version is enough) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(145deg, #0b1622 0%, #0f1a2b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            margin: 0;
+        }
+        .glass-card {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(18, 28, 46, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 36px;
+            padding: 36px 40px;
+            box-shadow: 0 30px 50px -15px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+        h2 {
+            font-weight: 500;
+            font-size: 2.1rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f0f9ff;
+        }
+        h2 i {
+            color: #22c55e;
+            font-size: 2rem;
+        }
+        .sub {
+            color: #94a3b8;
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+            border-left: 3px solid #22c55e;
+            padding-left: 16px;
+            background: rgba(34, 197, 94, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .input-group input {
+            flex: 1 1 280px;
+            padding: 16px 20px;
+            background: #0a111f;
+            border: 1.5px solid #2d3a4f;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            color: white;
+            outline: none;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .input-group input:focus {
+            border-color: #22c55e;
+            background: #0b1424;
+        }
+        .input-group button {
+            background: #22c55e;
+            border: none;
+            padding: 16px 34px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #0f172a;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(34, 197, 94, 0.3);
+            transition: 0.15s;
+            border: 1px solid rgba(255,255,255,0.2);
+            letter-spacing: 0.3px;
+        }
+        .input-group button i {
+            font-size: 1.2rem;
+        }
+        .input-group button:hover {
+            background: #16a34a;
+            transform: scale(1.02);
+            box-shadow: 0 10px 22px #22c55e70;
+            color: white;
+        }
+        .input-group button:active {
+            transform: scale(0.98);
+        }
+        .status-bar {
+            background: #0e1629;
+            border-radius: 80px;
+            padding: 12px 22px;
+            margin: 20px 0 22px 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #2a374b;
+            color: #b0c5e0;
+            font-weight: 400;
+            backdrop-filter: blur(4px);
+        }
+        .status-bar i {
+            color: #38bdf8;
+            width: 22px;
+            font-size: 1.2rem;
+        }
+        #status {
+            flex: 1;
+            word-break: break-word;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(100, 200, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: #22c55e;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #94a3b8;
+        }
+        .output-header label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #3b4c64;
+            color: #b9c9e6;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .copy-btn:hover {
+            background: #1e2b40;
+            color: white;
+            border-color: #22c55e;
+        }
+        #output {
+            background: #020617d0;
+            border: 1px solid #2a3a55;
+            border-radius: 28px;
+            padding: 28px;
+            min-height: 280px;
+            max-height: 550px;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            box-shadow: inset 0 0 20px #00000055;
+            scrollbar-width: thin;
+            scrollbar-color: #22c55e #0f1a2b;
+        }
+        #output::-webkit-scrollbar {
+            width: 10px;
+        }
+        #output::-webkit-scrollbar-track {
+            background: #0f1a2b;
+            border-radius: 10px;
+        }
+        #output::-webkit-scrollbar-thumb {
+            background: #22c55e;
+            border-radius: 10px;
+            border: 2px solid #0f1a2b;
+        }
+        .footer-note {
+            margin-top: 18px;
+            text-align: right;
+            color: #3f5270;
+            font-size: 0.8rem;
+        }
+        .footer-note i {
+            color: #22c55e;
+        }
+        .fa-solid, .fa-regular {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h2>
+            <i class="fas fa-robot"></i> 
+            Universal Text Scraper
+        </h2>
+        <div class="sub">
+            <i class="fas fa-arrow-right" style="margin-right: 8px;"></i>
+            extracts main article text · strips ads · jQuery power + loading spinner
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="url" placeholder="https://example.com/article" value="">
+            <button id="scrapeBtn">
+                <i class="fas fa-cloud-download-alt"></i> Scrape
+            </button>
+        </div>
+
+        <!-- status bar with dynamic icon + spinner -->
+        <div class="status-bar">
+            <i class="fas fa-circle-nodes" id="statusIcon" style="color:#3b82f6;"></i>
+            <span id="status">⏻ idle · enter url</span>
+            <span id="loadingSpinner" style="display: none; margin-left: auto; display: flex; align-items: center;">
+                <span class="spinner"></span> <span style="margin-left: 6px;">working</span>
+            </span>
+        </div>
+
+        <div class="output-header">
+            <label><i class="far fa-file-lines" style="margin-right: 6px;"></i> EXTRACTED CONTENT</label>
+            <button class="copy-btn" id="copyBtn"><i class="far fa-copy"></i> copy</button>
+        </div>
+
+        <div id="output">📄 Result will appear here after scraping ...</div>
+        <div class="footer-note">
+            <i class="fas fa-shield-alt"></i> multi‑proxy · smart cleaner
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+
+            // ----------------------------------- PROXIES (unchanged logic, but inside jquery)
+            const PROXIES = [
+                {
+                    name:'corsproxy.io',
+                    buildUrl:(target)=>`https://corsproxy.io/?${encodeURIComponent(target)}`,
+                    extract:async(res)=>res.text()
+                },
+                {
+                    name:'allorigins.win',
+                    buildUrl:(target)=>`https://api.allorigins.win/get?url=${encodeURIComponent(target)}`,
+                    extract:async(res)=>{
+                        const j = await res.json();
+                        return j.contents;
+                    }
+                },
+                {
+                    name:'codetabs.com',
+                    buildUrl:(target)=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`,
+                    extract:async(res)=>res.text()
+                }
+            ];
+
+            // ----- fetch via proxy (same logic, but uses async inside jquery)
+            async function fetchHTML(url) {
+                for (const proxy of PROXIES) {
+                    try {
+                        updateStatus(`🔁 trying proxy: ${proxy.name} ...`, 'fa-cloud', '#f59e0b', true);
+                        const response = await fetch(proxy.buildUrl(url));
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const html = await proxy.extract(response);
+                        updateStatus(`✅ loaded via ${proxy.name}`, 'fa-check-circle', '#22c55e', false);
+                        return html;
+                    } catch (e) {
+                        console.warn(proxy.name, "failed", e);
+                        // continue to next proxy
+                    }
+                }
+                throw new Error("✗ all proxies failed — url might be unreachable or blocked");
+            }
+
+            // helper to update status bar + optional spinner
+            function updateStatus(msg, iconClass, color, showSpinner = false) {
+                $('#status').text(msg);
+                $('#statusIcon').attr('class', `fas ${iconClass}`).css('color', color);
+                if (showSpinner) {
+                    $('#loadingSpinner').show();
+                } else {
+                    $('#loadingSpinner').hide();
+                }
+            }
+
+            // ----- cleanHTML (exactly same logic, but uses jquery for dom parsing? keep DOMParser)
+            function cleanHTML(html) {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(html, "text/html");
+
+                let removeTags = [
+                    "script","style","noscript","svg",
+                    "img","video","iframe","nav","footer",
+                    "header","aside","form","button"
+                ];
+                removeTags.forEach(tag => {
+                    doc.querySelectorAll(tag).forEach(el => el.remove());
+                });
+
+                // remove elements with typical ad/sidebar classes
+                doc.querySelectorAll(
+                    '[class*="ad"],[id*="ad"],[class*="sidebar"],[class*="menu"]'
+                ).forEach(el => {
+                    el.remove();
+                });
+
+                let text = doc.body.innerText || '';
+                // clean multiple newlines
+                text = text.replace(/\n\s*\n/g, "\n\n");
+                return text.trim() || '⚠️ No readable text found after cleaning.';
+            }
+
+            // ----- main scrape function (jquery event)
+            async function performScrape() {
+                const url = $('#url').val().trim();
+                if (!url) {
+                    alert('🌐 please enter a URL');
+                    return;
+                }
+
+                // reset output & show loading
+                $('#output').html('<span style="color:#94a3b8;"><i class="fas fa-spinner fa-pulse"></i> fetching & cleaning ...</span>');
+                updateStatus('⏳ starting scrape ...', 'fa-spinner fa-pulse', '#60a5fa', true);
+
+                try {
+                    const html = await fetchHTML(url);
+                    updateStatus('🧹 cleaning DOM · removing clutter', 'fa-broom', '#c084fc', true);
+                    
+                    const cleanText = cleanHTML(html);
+                    
+                    // Display with nice formatting (preserve line breaks)
+                    $('#output').text(cleanText);   // using text() to avoid injection & keep pre-wrap
+                    updateStatus('✔️ scrape complete', 'fa-circle-check', '#22c55e', false);
+                    
+                    // if text empty, show placeholder
+                    if (!cleanText || cleanText.length < 5) {
+                        $('#output').html('<span class="dim">⚠️ extracted text is empty — page might be dynamic or fully javascript driven</span>');
+                    }
+                } catch (error) {
+                    $('#output').html(`<span style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> ${error.message}</span>`);
+                    updateStatus('❌ failed — check console or url', 'fa-circle-exclamation', '#f87171', false);
+                }
+            }
+
+            // ----- event binding (jquery style)
+            $('#scrapeBtn').on('click', function(e) {
+                e.preventDefault();
+                performScrape();
+            });
+
+            // allow enter key in input
+            $('#url').on('keypress', function(e) {
+                if (e.which === 13) { // Enter
+                    e.preventDefault();
+                    performScrape();
+                }
+            });
+
+            // copy button logic
+            $('#copyBtn').on('click', function() {
+                const outputText = $('#output').text();  // raw text
+                if (!outputText || outputText.includes('Result will appear') || outputText.includes('fetching')) {
+                    alert('nothing to copy yet');
+                    return;
+                }
+                navigator.clipboard.writeText(outputText).then(() => {
+                    // visual feedback
+                    const originalHtml = $('#copyBtn').html();
+                    $('#copyBtn').html('<i class="fas fa-check"></i> copied!');
+                    setTimeout(() => {
+                        $('#copyBtn').html(originalHtml);
+                    }, 2000);
+                }).catch(() => {
+                    alert('copy failed, select manually');
+                });
+            });
+
+            // initial status (loading spinner hidden by default)
+            $('#loadingSpinner').hide();
+
+            // small demo prefilled example (optional, but user friendly)
+            $('#url').val('https://en.wikipedia.org/wiki/Web_scraping');  // example, but they can change
+
+        }); // end ready
+    </script>
+
+    <!-- ensure spinner visibility toggles properly, override inline if needed -->
+    <style>
+        /* small fix: make sure loadingSpinner flex when shown */
+        #loadingSpinner[style*="display: block"], #loadingSpinner[style*="display: flex"] {
+            display: flex !important;
+        }
+        .status-bar i {
+            font-size: 1.2rem;
+        }
+        .dim { opacity: 0.7; }
+    </style>
+</body>
+</html>
