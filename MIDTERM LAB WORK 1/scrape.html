@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Text Scraper · GUI refresh</title>
-    <!-- Font Awesome for icons (optional but enhances GUI) -->
+    <title>Universal Text Scraper · Formatted Article View</title>
+    <!-- Font Awesome 6 (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- jQuery (slim version is enough) -->
+    <!-- jQuery 3.7.1 -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         * {
@@ -170,22 +170,67 @@
             color: white;
             border-color: #22c55e;
         }
+        /* ---------- FORMATTED ARTICLE STYLES (like a clean newspaper) ---------- */
         #output {
             background: #020617d0;
             border: 1px solid #2a3a55;
             border-radius: 28px;
-            padding: 28px;
+            padding: 32px 36px;
             min-height: 280px;
-            max-height: 550px;
+            max-height: 600px;
             overflow: auto;
-            white-space: pre-wrap;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: #e6edf5;
             box-shadow: inset 0 0 20px #00000055;
             scrollbar-width: thin;
             scrollbar-color: #22c55e #0f1a2b;
+            text-rendering: optimizeLegibility;
         }
+        #output p {
+            margin: 0 0 1.2em 0;
+            padding: 0;
+            text-align: left;
+            word-spacing: 0.5px;
+        }
+        #output p:last-child {
+            margin-bottom: 0;
+        }
+        /* optional headings inside article remain smaller but distinct */
+        #output h1, #output h2, #output h3, #output h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: #d9e6f2;
+            margin: 1.2em 0 0.4em 0;
+            line-height: 1.3;
+        }
+        #output h1 { font-size: 1.8rem; }
+        #output h2 { font-size: 1.5rem; }
+        #output h3 { font-size: 1.3rem; }
+        /* blockquote style */
+        #output blockquote {
+            border-left: 4px solid #22c55e;
+            background: #0f1a2b;
+            padding: 0.8em 1.2em;
+            margin: 1.2em 0;
+            font-style: italic;
+            color: #cbd5e1;
+            border-radius: 0 20px 20px 0;
+        }
+        #output ul, #output ol {
+            padding-left: 1.8em;
+            margin: 0.8em 0;
+        }
+        #output li {
+            margin: 0.3em 0;
+        }
+        #output a {
+            color: #7ac7ff;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        /* fallback plain text gets wrapped in paragraphs via js, but we ensure any text node is readable */
         #output::-webkit-scrollbar {
             width: 10px;
         }
@@ -215,16 +260,16 @@
 <body>
     <div class="glass-card">
         <h2>
-            <i class="fas fa-robot"></i> 
+            <i class="fas fa-newspaper"></i> 
             Universal Text Scraper
         </h2>
         <div class="sub">
             <i class="fas fa-arrow-right" style="margin-right: 8px;"></i>
-            extracts main article text · strips ads · jQuery power + loading spinner
+            extracts article · automatic paragraph formatting · newspaper style
         </div>
 
         <div class="input-group">
-            <input type="text" id="url" placeholder="https://example.com/article" value="">
+            <input type="text" id="url" placeholder="https://example.com/article" value="https://en.wikipedia.org/wiki/Web_scraping">
             <button id="scrapeBtn">
                 <i class="fas fa-cloud-download-alt"></i> Scrape
             </button>
@@ -234,26 +279,27 @@
         <div class="status-bar">
             <i class="fas fa-circle-nodes" id="statusIcon" style="color:#3b82f6;"></i>
             <span id="status">⏻ idle · enter url</span>
-            <span id="loadingSpinner" style="display: none; margin-left: auto; display: flex; align-items: center;">
+            <span id="loadingSpinner" style="display: none; margin-left: auto; align-items: center;">
                 <span class="spinner"></span> <span style="margin-left: 6px;">working</span>
             </span>
         </div>
 
         <div class="output-header">
-            <label><i class="far fa-file-lines" style="margin-right: 6px;"></i> EXTRACTED CONTENT</label>
-            <button class="copy-btn" id="copyBtn"><i class="far fa-copy"></i> copy</button>
+            <label><i class="far fa-file-lines" style="margin-right: 6px;"></i> FORMATTED ARTICLE</label>
+            <button class="copy-btn" id="copyBtn"><i class="far fa-copy"></i> copy as text</button>
         </div>
 
-        <div id="output">📄 Result will appear here after scraping ...</div>
+        <!-- output area now will contain formatted html (paragraphs, etc) -->
+        <div id="output">📄 Result will appear here as a clean article ...</div>
         <div class="footer-note">
-            <i class="fas fa-shield-alt"></i> multi‑proxy · smart cleaner
+            <i class="fas fa-shield-alt"></i> multi‑proxy · smart formatter
         </div>
     </div>
 
     <script>
         $(document).ready(function(){
 
-            // ----------------------------------- PROXIES (unchanged logic, but inside jquery)
+            // ----------------------------------- PROXIES (unchanged)
             const PROXIES = [
                 {
                     name:'corsproxy.io',
@@ -275,7 +321,18 @@
                 }
             ];
 
-            // ----- fetch via proxy (same logic, but uses async inside jquery)
+            // Helper to update status bar
+            function updateStatus(msg, iconClass, color, showSpinner = false) {
+                $('#status').text(msg);
+                $('#statusIcon').attr('class', `fas ${iconClass}`).css('color', color);
+                if (showSpinner) {
+                    $('#loadingSpinner').css('display', 'flex');
+                } else {
+                    $('#loadingSpinner').hide();
+                }
+            }
+
+            // ----- fetch via proxy (same)
             async function fetchHTML(url) {
                 for (const proxy of PROXIES) {
                     try {
@@ -287,24 +344,62 @@
                         return html;
                     } catch (e) {
                         console.warn(proxy.name, "failed", e);
-                        // continue to next proxy
                     }
                 }
-                throw new Error("✗ all proxies failed — url might be unreachable or blocked");
+                throw new Error("✗ all proxies failed — url might be unreachable");
             }
 
-            // helper to update status bar + optional spinner
-            function updateStatus(msg, iconClass, color, showSpinner = false) {
-                $('#status').text(msg);
-                $('#statusIcon').attr('class', `fas ${iconClass}`).css('color', color);
-                if (showSpinner) {
-                    $('#loadingSpinner').show();
-                } else {
-                    $('#loadingSpinner').hide();
+            // ---------------- NEW FORMATTING FUNCTION (returns HTML with proper paragraphs)
+            function formatTextAsArticle(plainText) {
+                if (!plainText || plainText.trim() === '') {
+                    return '<p style="color:#94a3b8;">⚠️ No readable content extracted.</p>';
                 }
+
+                // Split by double newlines (paragraph breaks)
+                let blocks = plainText.split(/\n\s*\n/);
+                // filter out blocks that are only whitespace
+                blocks = blocks.filter(b => b.trim().length > 0);
+
+                if (blocks.length === 0) {
+                    // fallback: treat single line as one paragraph
+                    return `<p>${escapeHtml(plainText.trim())}</p>`;
+                }
+
+                // Build article: each block becomes a <p>, but we try to detect headers/lists?
+                // For simplicity and like "format in the page", we wrap each block in <p>.
+                // But also we'll preserve basic markdown-like detection (all caps line? but we keep simple)
+                let articleHtml = '';
+                blocks.forEach(block => {
+                    // trim inner spaces but keep line breaks within block as <br>? 
+                    // but we want paragraphs. Use <p> and replace single newlines inside block with <br> 
+                    // to preserve line breaks inside a paragraph.
+                    let lines = block.split('\n').filter(l => l.trim() !== '');
+                    if (lines.length <= 1) {
+                        // single line paragraph
+                        articleHtml += `<p>${escapeHtml(block.trim())}</p>\n`;
+                    } else {
+                        // multiple lines: join with <br> for inline line breaks, but still inside <p>
+                        let inner = lines.map(l => escapeHtml(l.trim())).join('<br>');
+                        articleHtml += `<p>${inner}</p>\n`;
+                    }
+                });
+
+                return articleHtml;
             }
 
-            // ----- cleanHTML (exactly same logic, but uses jquery for dom parsing? keep DOMParser)
+            // simple escape for safety (prevent XSS from weird page text)
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"']/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    if (m === '"') return '&quot;';
+                    if (m === "'") return '&#039;';
+                    return m;
+                });
+            }
+
+            // ----- cleanHTML (returns plain text, but we also preserve structure via newlines)
             function cleanHTML(html) {
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(html, "text/html");
@@ -318,20 +413,21 @@
                     doc.querySelectorAll(tag).forEach(el => el.remove());
                 });
 
-                // remove elements with typical ad/sidebar classes
+                // remove likely ad/sidebar elements
                 doc.querySelectorAll(
                     '[class*="ad"],[id*="ad"],[class*="sidebar"],[class*="menu"]'
                 ).forEach(el => {
                     el.remove();
                 });
 
+                // get innerText – preserves line breaks naturally
                 let text = doc.body.innerText || '';
-                // clean multiple newlines
-                text = text.replace(/\n\s*\n/g, "\n\n");
-                return text.trim() || '⚠️ No readable text found after cleaning.';
+                // normalize excessive newlines (leave paragraph breaks)
+                text = text.replace(/\n\s*\n\s*\n/g, '\n\n');  // max two newlines
+                return text.trim() || '';
             }
 
-            // ----- main scrape function (jquery event)
+            // ----- main scrape function
             async function performScrape() {
                 const url = $('#url').val().trim();
                 if (!url) {
@@ -339,53 +435,61 @@
                     return;
                 }
 
-                // reset output & show loading
-                $('#output').html('<span style="color:#94a3b8;"><i class="fas fa-spinner fa-pulse"></i> fetching & cleaning ...</span>');
+                // Show loading in output as well
+                $('#output').html('<div style="display: flex; gap:10px; align-items: center; color:#94a3b8;"><i class="fas fa-spinner fa-pulse"></i> fetching & building article ...</div>');
                 updateStatus('⏳ starting scrape ...', 'fa-spinner fa-pulse', '#60a5fa', true);
 
                 try {
                     const html = await fetchHTML(url);
-                    updateStatus('🧹 cleaning DOM · removing clutter', 'fa-broom', '#c084fc', true);
+                    updateStatus('🧹 cleaning & formatting as article ...', 'fa-broom', '#c084fc', true);
                     
                     const cleanText = cleanHTML(html);
                     
-                    // Display with nice formatting (preserve line breaks)
-                    $('#output').text(cleanText);   // using text() to avoid injection & keep pre-wrap
-                    updateStatus('✔️ scrape complete', 'fa-circle-check', '#22c55e', false);
+                    // ----- FORMAT like a newspaper: convert plain text into structured HTML
+                    const formattedHtml = formatTextAsArticle(cleanText);
                     
-                    // if text empty, show placeholder
-                    if (!cleanText || cleanText.length < 5) {
-                        $('#output').html('<span class="dim">⚠️ extracted text is empty — page might be dynamic or fully javascript driven</span>');
+                    // Inject into output (as HTML)
+                    $('#output').html(formattedHtml);
+                    
+                    updateStatus('✔️ article formatted', 'fa-circle-check', '#22c55e', false);
+                    
+                    if (!cleanText || cleanText.length < 20) {
+                        $('#output').html('<p style="color:#f87171;">⚠️ Very little text extracted — page might be JavaScript heavy.</p>');
                     }
                 } catch (error) {
-                    $('#output').html(`<span style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> ${error.message}</span>`);
-                    updateStatus('❌ failed — check console or url', 'fa-circle-exclamation', '#f87171', false);
+                    $('#output').html(`<p style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> ${escapeHtml(error.message)}</p>`);
+                    updateStatus('❌ failed', 'fa-circle-exclamation', '#f87171', false);
                 }
             }
 
-            // ----- event binding (jquery style)
+            // ----- event binding (jquery)
             $('#scrapeBtn').on('click', function(e) {
                 e.preventDefault();
                 performScrape();
             });
 
-            // allow enter key in input
             $('#url').on('keypress', function(e) {
-                if (e.which === 13) { // Enter
+                if (e.which === 13) {
                     e.preventDefault();
                     performScrape();
                 }
             });
 
-            // copy button logic
+            // copy button: copies the raw plain text (not HTML) to clipboard
             $('#copyBtn').on('click', function() {
-                const outputText = $('#output').text();  // raw text
-                if (!outputText || outputText.includes('Result will appear') || outputText.includes('fetching')) {
+                // we can extract plain text from output (so user gets clean text without <p> tags)
+                const outputDiv = $('#output');
+                // get plain text version (browser innerText simulates rendering)
+                // we'll use a dummy element to extract innerText to preserve line breaks as they appear
+                const tempDiv = $('<div>').html(outputDiv.html()); // clone html
+                // but innerText works on actual DOM, so better:
+                const plain = outputDiv[0].innerText || outputDiv.text();
+                
+                if (!plain || plain.includes('Result will appear') || plain.includes('fetching')) {
                     alert('nothing to copy yet');
                     return;
                 }
-                navigator.clipboard.writeText(outputText).then(() => {
-                    // visual feedback
+                navigator.clipboard.writeText(plain).then(() => {
                     const originalHtml = $('#copyBtn').html();
                     $('#copyBtn').html('<i class="fas fa-check"></i> copied!');
                     setTimeout(() => {
@@ -396,25 +500,10 @@
                 });
             });
 
-            // initial status (loading spinner hidden by default)
+            // hide spinner initially
             $('#loadingSpinner').hide();
-
-            // small demo prefilled example (optional, but user friendly)
-            $('#url').val('https://en.wikipedia.org/wiki/Web_scraping');  // example, but they can change
 
         }); // end ready
     </script>
-
-    <!-- ensure spinner visibility toggles properly, override inline if needed -->
-    <style>
-        /* small fix: make sure loadingSpinner flex when shown */
-        #loadingSpinner[style*="display: block"], #loadingSpinner[style*="display: flex"] {
-            display: flex !important;
-        }
-        .status-bar i {
-            font-size: 1.2rem;
-        }
-        .dim { opacity: 0.7; }
-    </style>
 </body>
 </html>
